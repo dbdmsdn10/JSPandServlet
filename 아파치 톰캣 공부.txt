@@ -1,0 +1,30 @@
+localhost:8889
+
+
+eclipse에서 한글 쓰고싶으면
+response.setCharacterEncoding("UTF-8");//이것과 아래것은 출력시 필요
+response.setContentType("text/html; charset=UTF-8");
+
+아래것은 서버에서 값을 가져올때 사용
+request.setCharacterEncoding("UTF-8");
+
+
+
+
+타임존에러
+?serverTimezone=UTC
+
+서버 안켜질시(Server Tomcat v7.0 Server at localhost failed to start)
+<workspace-directory>\.metadata\.plugins\org.eclipse.core.resources
+의 경로에있는거 전부삭제
+출처: https://tibang.tistory.com/entry/Server-Tomcat-v70-Server-at-localhost-failed-to-start-에러 [T없이맑은날]
+
+
+재설치시
+
+바탕화면->json-simple과 mysql-connector를 apach의 lib폴더가 가져다 놔야함
+apach가 설치된곳에
+servlet-api.jar를 add external jar로 가져와야함
+또한 교체
+C:\Program Files\Java\jdk1.8.0_201\jre\lib\ext
+에 넣어야함

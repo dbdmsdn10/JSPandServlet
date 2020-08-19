@@ -1,0 +1,94 @@
+웹=html에대한 교육
+editplus 사용
+저장위치
+C:\Users\dbdms\AndroidStudioProjects\android2\HtmlFolder
+<htlm>, <head>..등을 테그라고함
+<h1>은 제목(두꺼운 글자)
+
+알파뱃 뒷의 숫자가 커질수록 글자크기는 작아짐
+
+<p>문단
+많은 글자를 넣을때 사용, 창의 크기에 따라 자동으로 줄을바꿈
+
+<img src="그림 경로">그림
+그림을 넣을때사용
+
+<a href="사이트 주소">링크가 보여질 텍스트</a>
+클릭시 이동되는 링크
+
+<style>
+	 #header1 {background-color:black;color:yellow;font-size:80px;padding:0px 0px 30px 0px;}
+  </style>==아이디만
+<style>
+	 h1 {background-color:black;color:yellow;font-size:80px;padding:0px 0px 30px 0px;}
+  </style>==테그 전부다
+
+<style> 
+	 .para {color:green;}
+  </style>==class인 것에 적용
+
+
+글자색, 폰트 크기 수정이가능
+background-color=배경 색깔
+color:yellow= txt색깔
+font-size=글자크기
+padding:위, 오른쪽, 아래쪽, 왼쪽(시계방향)
+#아이디의 이름=하면 아이디에 해당되는것만 적용
+
+<?? id="아이디 이름">=id만드는법
+
+style을 여러 id에 적용시키고싶으면 싶으면
+#이름, #이름
+
+
+<button>클릭하시오</button>
+버튼만들기
+
+
+<script>
+		function print(){
+		alert("안녕하세요")
+		}
+  </script>
+
+alert==팝업, 알림창
+<button onClick="print();">
+하면 이 버튼 클릭시 위의 알람창이 뜸
+
+//----------------------------------위는 html, 아래는 jsp
+
+request.setCharacterEncoding("UTF-8");
+ try{
+ Class.forName("com.mysql.jdbc.Driver");
+ Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/webdb?serverTimezone=UTC", "root", "9009908dms");
+ request.setCharacterEncoding("UTF-8");
+}catch{}
+로 연결
+
+저기 안에
+String id=request.getParameter("이름");
+를하면
+
+http://localhost:8888/user/read.jsp?이름=user1
+으로값을 받음
+이름은 변경가능
+
+
+out.println(문자열);
+으로 창에 출력가능
+위 식으로 출력시 html의  테그 사용가능
+
+//---------------------------------------------
+eclipse servlet
+저장하는 방법은 2가지
+aplication과 session이 있는데
+aplication은 웹 전체에서 사용가능
+session은 현제 들어오 사용자, 즉 유저만 사용가능
+
+seesion의 경우 id를 줘서 구분함
+다른 브라운저(크롬, explore)을 열면 서로 다른아이디를줌
+브라우저를 끄더라도 id는 사라짐
+이 id는 network->header->cookie라는 곳에 표시됨
+타임아웃시 사라지기도함
+aplication은 서버가 꺼지지않는한 안사라짐
+cookie라는것도 있는데 이것은 client가 가지고 있는것
