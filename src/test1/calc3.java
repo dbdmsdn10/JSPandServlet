@@ -77,6 +77,7 @@ public class calc3 extends HttpServlet {
 			response.addCookie(opcookie);
 
 			response.getWriter().println("뒤로 가서 숫자입력후 결과를 눌러주세요");
+			response.sendRedirect("Carcul3.html");
 		}
 
 	}
