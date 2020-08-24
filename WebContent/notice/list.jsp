@@ -1,6 +1,6 @@
  <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page import="java.sql.DriverManager"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.Statement"%>
@@ -198,7 +198,7 @@ rs =st.executeQuery("select* from notice");
 					<tr>
 						
 						<td><%=rs.getString("id")%></td>
-						<td class="title indent text-align-left"><a href="detail.html"><%=rs.getString("TITLE")%></a></td>
+						<td class="title indent text-align-left"><a href="detail.jsp?id=<%=rs.getString("id")%>"><%=rs.getString("TITLE")%></a></td>
 						<td><%=rs.getString("WRITER_ID")%></td>
 						<td>
 							<%=rs.getString("REGFATE")%>	
@@ -221,20 +221,32 @@ rs =st.executeQuery("select* from notice");
 			<div class="margin-top align-center pager">	
 		
 	<div>
+	<c:set var="page" value="${param.p==null?0:param.p}"/>
+	<c:set var="startnum" value="${page-(page-1)%5}"/>
+	<c:set var="lastnum" value="23"/>
+		<c:if test="${startnum>1}">
+			<a href="?p=${startnum-1}&t=&q=" class="btn btn-prev" >이전</a>
+			</c:if>
+			<c:if test="${startnum<=1}">
+			<span class="btn btn-prev" onclick="alert('이전 페이지가 없습니다.');">이전</span>
+			</c:if>
 		
 		
-		<span class="btn btn-prev" onclick="alert('이전 페이지가 없습니다.');">이전</span>
 		
 	</div>
 	<ul class="-list- center">
-		<li><a class="-text- orange bold" href="?p=1&t=&q=" >1</a></li>
-				
+	
+		<c:forEach var="a" begin="0" end="4">
+		<li><a class="-text- orange bold" href="?p=${startnum}&t=&q=" >${startnum+a}</a></li>
+		</c:forEach>
 	</ul>
 	<div>
-		
-		
+			<c:if test="${startnum+5<lastnum}">
+			<a href="?p=${startnum+5}&t=&q=" class="btn btn-next" >다음</a>
+			</c:if>
+			<c:if test="${startnum+5>=lastnum}">
 			<span class="btn btn-next" onclick="alert('다음 페이지가 없습니다.');">다음</span>
-		
+			</c:if>
 	</div>
 	
 			</div>
