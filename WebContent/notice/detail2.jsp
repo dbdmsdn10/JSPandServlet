@@ -1,7 +1,66 @@
 
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.Connection"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%
+	Connection con;
+PreparedStatement st;
+ResultSet rs;
+ResultSet rs2;
 
+Class.forName("com.mysql.jdbc.Driver");
+con = DriverManager.getConnection("jdbc:mysql://localhost:3306/xepdb?characterEncoding=UTF-8&serverTimezone=UTC",
+		"root", "9009908dms");
+st = con.prepareStatement("select* from notice where id=?");
+st.setString(1, request.getParameter("id"));
+rs = st.executeQuery();
+rs.next();
+
+st = con.prepareStatement("SELECT COUNT(*) FROM notice");
+rs2 = st.executeQuery();
+rs2.next();
+int count = rs2.getInt("COUNT(*)");
+
+st = con.prepareStatement(
+		"select * from (select @rownum:=@rownum+1 AS num,n. *from (select *from notice order by regfate) n,(select @rownum:=0) r)  b where id=?");
+st.setString(1, request.getParameter("id"));
+rs2 = st.executeQuery();
+rs2.next();
+int now = rs2.getInt("num");
+int pre = 0;
+int next = 0;
+String nexttitle = null;
+String pretitle = null;
+st = con.prepareStatement(
+		"select * from (select @rownum:=@rownum+1 as num,n. *from (select *from notice order by regfate) n, (select @rownum:=0) r) b where num=?");
+if (now - 1 > 0) {
+	st.setInt(1, now - 1);
+	rs2 = st.executeQuery();
+	rs2.next();
+	pre = rs2.getInt("id");
+	pretitle = rs2.getString("title");
+	st = con.prepareStatement(
+	"select * from (select @rownum:=@rownum+1 as num,n. *from (select *from notice order by regfate) n, (select @rownum:=0) r) b where num=?");
+}
+if (now + 1 < count + 1) {
+	st.setInt(1, now + 1);
+	rs2 = st.executeQuery();
+	rs2.next();
+	next = rs2.getInt("id");
+	nexttitle = rs2.getString("title");
+	st = con.prepareStatement(
+	"select * from (select @rownum:=@rownum+1 as num,n. *from (select *from notice order by regfate) n, (select @rownum:=0) r) b where num=?");
+}
+
+System.out.println("지금것= " + pre + " 다음것=" + next);
+
+// jdbc:mysql://위치:포트번호/데이터베이스 이름?characterEncoding=UTF-8&serverTimezone=UTC,
+// "아이디", "비번"
+%>
 <!DOCTYPE html>
 <html>
 
@@ -150,37 +209,34 @@
 					<table class="table">
 						<tbody>
 							<tr>
-							
 								<th>제목</th>
 								<td class="text-align-left text-indent text-strong text-orange"
-									colspan="3"><%=request.getAttribute("title") %></td>
+									colspan="3"><%=rs.getString("title")%></td>
 							</tr>
 							<tr>
 								<th>작성일</th>
-								<td class="text-align-left text-indent" colspan="3"><%=request.getAttribute("regfate") %>
+								<td class="text-align-left text-indent" colspan="3"><%=rs.getString("regfate")%>
 								</td>
 							</tr>
 							<tr>
 								<th>작성자</th>
-								<td>
-								<%=request.getAttribute("writer_id") %></td>
+								<td><%=rs.getString("writer_id")%></td>
 								<th>조회수</th>
-								<td><%=request.getAttribute("hit") %></td>
+								<td>148</td>
 							</tr>
 							<tr>
 								<th>첨부파일</th>
-								<td colspan="3"><%=request.getAttribute("filse") %></td>
+								<td colspan="3"><%=rs.getString("filse")%></td>
 							</tr>
 							<tr class="content">
-								
+								<%=rs.getString("content")%>
 							</tr>
-							
 						</tbody>
 					</table>
 				</div>
 
 				<div class="margin-top text-align-center">
-					<%=request.getAttribute("content") %>
+					<%=rs.getString("content")%>
 					<a class="btn btn-list" href="list.html">목록</a>
 				</div>
 
@@ -191,14 +247,14 @@
 							<tr>
 								<th>이전글</th>
 								<td colspan="3" class="text-align-left text-indent">
-								
-								<%System.out.println("detail 에서 pre="+request.getAttribute("pre")+"  next="+request.getAttribute("next")); %>
-								<%if(!request.getAttribute("pre").equals(0)){ %>
-								<a class="text-blue text-strong" href="/NoticeDetailController?id=<%=request.getAttribute("pre")%>">
-								<%=request.getAttribute("pretitle")%></a>
-								<%}else{%>
-									이전글이 없습니다.
-								<%} %>
+									<%
+										if (pre != 0) {
+									%> <a class="text-blue text-strong"
+									href="/notice/detail.jsp?id=<%=pre%>"><%=pretitle%></a> <%
+ 	} else {
+ %> 다음글이 없습니다. <%
+ 	}
+ %>
 								</td>
 							</tr>
 
@@ -208,14 +264,14 @@
 							<tr>
 								<th>다음글</th>
 								<td colspan="3" class="text-align-left text-indent">
-								
-								<%if(!request.getAttribute("next").equals(0)){ %>
-								<a class="text-blue text-strong" href="/NoticeDetailController?id=<%=request.getAttribute("next")%>"><%=request.getAttribute("nexttitle")%></a>
-								<%}else{%>
-									다음글이 없습니다.
-								<%} %>
-								
-								
+									<%
+										if (next != 0) {
+									%> <a class="text-blue text-strong"
+									href="/notice/detail.jsp?id=<%=next%>"><%=nexttitle%></a> <%
+ 	} else {
+ %> 다음글이 없습니다. <%
+ 	}
+ %>
 								</td>
 							</tr>
 
