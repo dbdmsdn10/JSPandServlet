@@ -77,7 +77,7 @@ if (cnt % 5 == 0) {
 	height: inherit;
 	display: flex;
 	align-items: center;
-	background: url("../../images/customer/visual.png") no-repeat center;
+	background: url("/images/mypage/visual.png") no-repeat center;
 }
 </style>
 </head>
@@ -91,8 +91,7 @@ if (cnt % 5 == 0) {
 			<!-- ---------------------------<header>--------------------------------------- -->
 
 			<h1 id="logo">
-				<a href="/index.html"> <img src="../images/logo.png"
-					alt="뉴렉처 온라인" />
+				<a href="/index.html"> <img src="/images/logo.png" alt="뉴렉처 온라인" />
 
 				</a>
 			</h1>
@@ -136,9 +135,9 @@ if (cnt % 5 == 0) {
 						<h1 class="hidden">고객메뉴</h1>
 						<ul class="linear-layout">
 							<li><a href="/member/home"><img
-									src="images/txt-mypage.png" alt="마이페이지" /></a></li>
-							<li><a href="/notice/list.jsp"><img
-									src="images/txt-customer.png" alt="고객센터" /></a></li>
+									src="/images/txt-mypage.png" alt="마이페이지" /></a></li>
+							<li><a href="/notice/list.html"><img
+									src="/images/txt-customer.png" alt="고객센터" /></a></li>
 						</ul>
 					</nav>
 
@@ -164,28 +163,21 @@ if (cnt % 5 == 0) {
 
 
 			<aside class="aside">
-				<h1>고객센터</h1>
+				<h1>ADMIN PAGE</h1>
 
 				<nav class="menu text-menu first margin-top">
-					<h1>고객센터메뉴</h1>
+					<h1>마이페이지</h1>
 					<ul>
-						<li><a class="current" href="/customer/notice">공지사항</a></li>
-						<li><a class="" href="/customer/faq">자주하는 질문</a></li>
-						<li><a class="" href="/customer/question">수강문의</a></li>
-						<li><a class="" href="/customer/event">이벤트</a></li>
-
+						<li><a href="/admin/index.html">관리자홈</a></li>
+						<li><a href="/teacher/index.html">선생님페이지</a></li>
+						<li><a href="/student/index.html">수강생페이지</a></li>
 					</ul>
 				</nav>
 
-
-				<nav class="menu">
-					<h1>협력업체</h1>
+				<nav class="menu text-menu">
+					<h1>알림관리</h1>
 					<ul>
-						<li><a target="_blank" href="http://www.notepubs.com"><img
-								src="/images/notepubs.png" alt="노트펍스" /></a></li>
-						<li><a target="_blank" href="http://www.namoolab.com"><img
-								src="/images/namoolab.png" alt="나무랩연구소" /></a></li>
-
+						<li><a href="/admin/board/notice/list.html">공지사항</a></li>
 					</ul>
 				</nav>
 
@@ -212,63 +204,72 @@ if (cnt % 5 == 0) {
 						<fieldset>
 							<legend class="hidden">공지사항 검색 필드</legend>
 							<label class="hidden">검색분류</label> <select name="f">
-								<option ${(param.f=="title")?"selected":"" } value="title">제목</option>
-								<option ${(param.f=="writer_Id")?"selected":"" }
-									value="writer_Id">작성자</option>
+								<option value="title">제목</option>
+								<option value="writerId">작성자</option>
 							</select> <label class="hidden">검색어</label> <input type="text" name="q"
-								value="${param.q}" /> <input class="btn btn-search"
-								type="submit" value="검색" />
+								value="" /> <input class="btn btn-search" type="submit"
+								value="검색" />
 						</fieldset>
 					</form>
 				</div>
+				<form action="list" method="post">
+					<div class="notice margin-top">
+						<h3 class="hidden">공지사항 목록</h3>
+						<table class="table">
+							<thead>
+								<tr>
+									<th class="w60">번호</th>
+									<th class="expand">제목</th>
+									<th class="w100">작성자</th>
+									<th class="w100">작성일</th>
+									<th class="w60">조회수</th>
+									<th class="w40">공개</th>
+									<th class="w40">삭제</th>
+								</tr>
+							</thead>
+							<tbody>
 
-				<div class="notice margin-top">
-					<h3 class="hidden">공지사항 목록</h3>
-					<table class="table">
-						<thead>
-							<tr>
-								<th class="w60">번호</th>
-								<th class="expand">제목</th>
-								<th class="w100">작성자</th>
-								<th class="w100">작성일</th>
-								<th class="w60">조회수</th>
-							</tr>
-						</thead>
-						<tbody>
+								<%
+									while (rs.next()) {
+								%>
+								<tr>
+									<td><%=rs.getInt("num")%></td>
 
-							<%
-								while (rs.next()) {
-							%>
-							<tr>
-
-								<td><%=rs.getInt("num")%></td>
-								
-								<td class="title indent text-align-left"><a
-									href="/NoticeDetailController?id=<%=rs.getString("id")%>"><%=rs.getString("TITLE")%></a><span class="text-orange text-strong">[<%=rs.getInt("ccnt")%>]</span></td>
-								<td><%=rs.getString("WRITER_ID")%></td>
-								<td><%=rs.getString("REGFATE")%></td>
-								<td><%=rs.getString("HIT")%></td>
-							</tr>
-							<%
-								}
-							%>
-
-
-
-						</tbody>
-					</table>
-				</div>
-
-				<div class="indexer margin-top align-right">
-					<h3 class="hidden">현재 페이지</h3>
-					<div>
-						<span class="text-orange text-strong">${(empty param.p)?1:param.p}</span>
-						/
-						<%=cnt%>
-						pages
+									<td class="title indent text-align-left"><a
+										href="/NoticeDetailController?id=<%=rs.getString("id")%>"><%=rs.getString("TITLE")%></a><span
+										class="text-orange text-strong">[<%=rs.getInt("ccnt")%>]
+									</span></td>
+									<td><%=rs.getString("WRITER_ID")%></td>
+									<td><%=rs.getString("REGFATE")%></td>
+									<td><%=rs.getString("HIT")%></td>
+									<td><input type="checkbox" name="open-id"
+										value=<%=rs.getString("id")%>></td>
+									<td><input type="checkbox" name="del-id"
+										value=<%=rs.getString("id")%>></td>
+								</tr>
+								<%
+									}
+								%>
+							</tbody>
+						</table>
 					</div>
-				</div>
 
+					<div class="indexer margin-top align-right">
+						<h3 class="hidden">현재 페이지</h3>
+						<div>
+							<span class="text-orange text-strong">${(empty param.p)?1:param.p}</span>
+							/
+							<%=cnt%>
+							pages
+						</div>
+					</div>
+
+					<div class="text-align-right margin-top">
+						<input type="submit" class="btn-text btn-default" value="일괄공개">
+						<input type="submit" class="btn-text btn-default" value="일괄삭제">
+						<a class="btn-text btn-default" href="reg.html">글쓰기</a>
+					</div>
+				</form>
 				<div class="margin-top align-center pager">
 
 					<div>
@@ -281,8 +282,6 @@ if (cnt % 5 == 0) {
 						<c:if test="${startnum<=1}">
 							<span class="btn btn-prev" onclick="alert('이전 페이지가 없습니다.');">이전</span>
 						</c:if>
-
-
 
 					</div>
 					<ul class="-list- center">
