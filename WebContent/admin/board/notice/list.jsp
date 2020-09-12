@@ -236,7 +236,7 @@ if (cnt % 5 == 0) {
 									<td><%=rs.getInt("num")%></td>
 
 									<td class="title indent text-align-left"><a
-										href="/NoticeDetailController?id=<%=rs.getString("id")%>"><%=rs.getString("TITLE")%></a><span
+										href="NoticeDetailController?id=<%=rs.getString("id")%>"><%=rs.getString("TITLE")%></a><span
 										class="text-orange text-strong">[<%=rs.getInt("ccnt")%>]
 									</span></td>
 									<td><%=rs.getString("WRITER_ID")%></td>
@@ -265,9 +265,10 @@ if (cnt % 5 == 0) {
 					</div>
 
 					<div class="text-align-right margin-top">
-						<input type="submit" class="btn-text btn-default" name="cmd" value="일괄공개">
-						<input type="submit" class="btn-text btn-default" name="cmd" value="일괄삭제">
-						<a class="btn-text btn-default" href="reg.html">글쓰기</a>
+						<input type="submit" class="btn-text btn-default" name="cmd"
+							value="일괄공개"> <input type="submit"
+							class="btn-text btn-default" name="cmd" value="일괄삭제"> <a
+							class="btn-text btn-default" href="reg">글쓰기</a>
 					</div>
 				</form>
 				<div class="margin-top align-center pager">
