@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Enumeration;
 
 import javax.servlet.ServletException;
@@ -44,30 +45,62 @@ public class RegController2 extends HttpServlet {
 		String content = request.getParameter("content");
 		String isOpen = request.getParameter("open");
 
-		Part filePart = request.getPart("file");// 파일 받기
-		String filename=filePart.getSubmittedFileName();//파일 이름받기
-		
-		filePart.getInputStream();
+		Collection<Part> parts = request.getParts();// 파일 받기
+		StringBuilder builder = new StringBuilder();
+		for (Part p : parts) {
+			if (!p.getName().equals("file")) {
+				continue;
+			} else {
+				Part filePart = p;// 파일 받기
+				String filename = filePart.getSubmittedFileName();// 파일 이름받기
 
-		InputStream fis=filePart.getInputStream();//파일 읽기
-		
-		String realpath = request.getServletContext().getRealPath("/upload");
-		System.out.println(realpath);
-		String filepath=realpath+File.separator+filename;// \대신 separator를쓰자
-		FileOutputStream fos=new FileOutputStream(filepath);
-//		int b;
-//		while((b=fis.read())!=-1) {//read란것은 바이트 단위로 읽는것을 의미한다
-//			fos.write(b);
-//		}
-		//위것을 써도되는데 바이트씩해서 매우 오래걸림 ex)티스푼으로 항아리 채우기
-		byte buf[]=new byte[1024];
-		int size=0;
-		while((size=fis.read(buf))!=-1) {//이때 read는 길이를 의미한다
-			fos.write(buf,0,size);//내용,시작,끝  포스경로에 읽은파일을 다시쓰는것을 의미함
+				builder.append(filename);
+				builder.append(",");
+				filePart.getInputStream();
+
+				InputStream fis = filePart.getInputStream();// 파일 읽기
+
+				String realpath = request.getServletContext().getRealPath("/upload");
+				System.out.println(realpath);
+				String filepath = realpath + File.separator + filename;// \대신 separator를쓰자
+				FileOutputStream fos = new FileOutputStream(filepath);
+				byte buf[] = new byte[1024];
+				int size = 0;
+				while ((size = fis.read(buf)) != -1) {// 이때 read는 길이를 의미한다
+					fos.write(buf, 0, size);// 내용,시작,끝 포스경로에 읽은파일을 다시쓰는것을 의미함
+				}
+				fos.close();
+				fis.close();
+			}
 		}
-		fos.close();
-		fis.close();
-		
+		if (builder.length()>0) {
+			builder.delete(builder.length() - 1, builder.length());
+		}
+//		Part filePart = request.getPart("file");// 파일 받기
+//		String filename=filePart.getSubmittedFileName();//파일 이름받기
+//		
+//		filePart.getInputStream();
+//
+//		InputStream fis=filePart.getInputStream();//파일 읽기
+//		
+//		String realpath = request.getServletContext().getRealPath("/upload");
+//		System.out.println(realpath);
+//		String filepath=realpath+File.separator+filename;// \대신 separator를쓰자
+//		FileOutputStream fos=new FileOutputStream(filepath);
+
+////		int b;
+////		while((b=fis.read())!=-1) {//read란것은 바이트 단위로 읽는것을 의미한다
+////			fos.write(b);
+//// 		}
+		// 위것을 써도되는데 바이트씩해서 매우 오래걸림 ex)티스푼으로 항아리 채우기
+//		byte buf[]=new byte[1024];
+//		int size=0;
+//		while((size=fis.read(buf))!=-1) {//이때 read는 길이를 의미한다
+//			fos.write(buf,0,size);//내용,시작,끝  포스경로에 읽은파일을 다시쓰는것을 의미함
+//		}
+//		fos.close();
+//		fis.close();
+		// -----------------------------------------------------------------
 		PrintWriter out = response.getWriter();
 		out.printf("title: %s<br>", title);
 		out.printf("content: %s<br>", content);
@@ -90,13 +123,14 @@ public class RegController2 extends HttpServlet {
 					"9009908dms");
 
 			PreparedStatement st = con
-					.prepareStatement("insert into notice(title,content,writer_id,public,regfate) value(?,?,?,?,?)");
+					.prepareStatement("insert into notice(title,content,writer_id,public,regfate,filse) value(?,?,?,?,?,?)");
 			st.setString(1, title);
 			st.setString(2, content);
 			st.setString(3, "초기값");
 			st.setInt(4, is);
 			st.setString(5, format_time2);
-			//st.executeUpdate();
+			st.setString(6, builder.toString());
+			st.executeUpdate();
 
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -109,6 +143,6 @@ public class RegController2 extends HttpServlet {
 		} catch (Exception e) {
 			System.out.println("오류= " + e.toString());
 		}
-
+		response.sendRedirect("list");
 	}
 }
