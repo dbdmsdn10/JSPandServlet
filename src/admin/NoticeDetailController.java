@@ -77,6 +77,7 @@ public class NoticeDetailController extends HttpServlet {
 			request.setAttribute("hit", rs.getString("hit"));
 			request.setAttribute("filse", rs.getString("filse"));
 			request.setAttribute("content", rs.getString("content"));
+			request.setAttribute("filse", rs.getString("filse"));
 			
 			request.setAttribute("pre", pre);
 			request.setAttribute("pretitle", pretitle);

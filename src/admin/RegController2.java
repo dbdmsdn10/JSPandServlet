@@ -47,33 +47,41 @@ public class RegController2 extends HttpServlet {
 
 		Collection<Part> parts = request.getParts();// 파일 받기
 		StringBuilder builder = new StringBuilder();
-		for (Part p : parts) {
-			if (!p.getName().equals("file")) {
-				continue;
-			} else {
-				Part filePart = p;// 파일 받기
-				String filename = filePart.getSubmittedFileName();// 파일 이름받기
+		try {
+			for (Part p : parts) {
+				if (!p.getName().equals("file")) {
+					continue;
+				} else {
+					Part filePart = p;// 파일 받기
+					String filename = filePart.getSubmittedFileName();// 파일 이름받기
+					if(filename.equals("")) {//파일이 없을수도있음
+						continue;
+					}
+					builder.append(filename);
+					
+					
+					filePart.getInputStream();
 
-				builder.append(filename);
-				builder.append(",");
-				filePart.getInputStream();
+					InputStream fis = filePart.getInputStream();// 파일 읽기
 
-				InputStream fis = filePart.getInputStream();// 파일 읽기
-
-				String realpath = request.getServletContext().getRealPath("/upload");
-				System.out.println(realpath);
-				String filepath = realpath + File.separator + filename;// \대신 separator를쓰자
-				FileOutputStream fos = new FileOutputStream(filepath);
-				byte buf[] = new byte[1024];
-				int size = 0;
-				while ((size = fis.read(buf)) != -1) {// 이때 read는 길이를 의미한다
-					fos.write(buf, 0, size);// 내용,시작,끝 포스경로에 읽은파일을 다시쓰는것을 의미함
+					String realpath = request.getServletContext().getRealPath("/upload");
+					System.out.println(realpath);
+					String filepath = realpath + File.separator + filename;// \대신 separator를쓰자
+					FileOutputStream fos = new FileOutputStream(filepath);
+					byte buf[] = new byte[1024];
+					int size = 0;
+					while ((size = fis.read(buf)) != -1) {// 이때 read는 길이를 의미한다
+						fos.write(buf, 0, size);// 내용,시작,끝 포스경로에 읽은파일을 다시쓰는것을 의미함
+					}
+					fos.close();
+					fis.close();
 				}
-				fos.close();
-				fis.close();
 			}
+		} catch (Exception e) {
+			System.out.println("파일오류" + e.toString());
 		}
-		if (builder.length()>0) {
+		
+		if (builder.length() > 0) {
 			builder.delete(builder.length() - 1, builder.length());
 		}
 //		Part filePart = request.getPart("file");// 파일 받기
@@ -122,8 +130,8 @@ public class RegController2 extends HttpServlet {
 					"jdbc:mysql://localhost:3306/xepdb?characterEncoding=UTF-8&serverTimezone=UTC", "root",
 					"9009908dms");
 
-			PreparedStatement st = con
-					.prepareStatement("insert into notice(title,content,writer_id,public,regfate,filse) value(?,?,?,?,?,?)");
+			PreparedStatement st = con.prepareStatement(
+					"insert into notice(title,content,writer_id,public,regfate,filse) value(?,?,?,?,?,?)");
 			st.setString(1, title);
 			st.setString(2, content);
 			st.setString(3, "초기값");
@@ -135,11 +143,11 @@ public class RegController2 extends HttpServlet {
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println(e.toString());
+			System.out.println("오류1" + e.toString());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println(e.toString());
+			System.out.println("오류2" + e.toString());
 		} catch (Exception e) {
 			System.out.println("오류= " + e.toString());
 		}

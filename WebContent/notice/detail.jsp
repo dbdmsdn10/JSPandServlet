@@ -150,37 +150,38 @@
 					<table class="table">
 						<tbody>
 							<tr>
-							
+
 								<th>제목</th>
 								<td class="text-align-left text-indent text-strong text-orange"
-									colspan="3"><%=request.getAttribute("title") %></td>
+									colspan="3"><%=request.getAttribute("title")%></td>
 							</tr>
 							<tr>
 								<th>작성일</th>
-								<td class="text-align-left text-indent" colspan="3"><%=request.getAttribute("regfate") %>
+								<td class="text-align-left text-indent" colspan="3"><%=request.getAttribute("regfate")%>
 								</td>
 							</tr>
 							<tr>
 								<th>작성자</th>
-								<td>
-								<%=request.getAttribute("writer_id") %></td>
+								<td><%=request.getAttribute("writer_id")%></td>
 								<th>조회수</th>
-								<td><%=request.getAttribute("hit") %></td>
+								<td><%=request.getAttribute("hit")%></td>
 							</tr>
 							<tr>
 								<th>첨부파일</th>
-								<td colspan="3"><%=request.getAttribute("filse") %></td>
+								<td colspan="3">
+									
+								</td>
 							</tr>
 							<tr class="content">
-								
+
 							</tr>
-							
+
 						</tbody>
 					</table>
 				</div>
 
 				<div class="margin-top text-align-center">
-					<%=request.getAttribute("content") %>
+					<%=request.getAttribute("content")%>
 					<a class="btn btn-list" href="list.html">목록</a>
 				</div>
 
@@ -191,14 +192,17 @@
 							<tr>
 								<th>이전글</th>
 								<td colspan="3" class="text-align-left text-indent">
-								
-								<%System.out.println("detail 에서 pre="+request.getAttribute("pre")+"  next="+request.getAttribute("next")); %>
-								<%if(!request.getAttribute("pre").equals(0)){ %>
-								<a class="text-blue text-strong" href="/NoticeDetailController?id=<%=request.getAttribute("pre")%>">
-								<%=request.getAttribute("pretitle")%></a>
-								<%}else{%>
-									이전글이 없습니다.
-								<%} %>
+									<%
+										System.out.println("detail 에서 pre=" + request.getAttribute("pre") + "  next=" + request.getAttribute("next"));
+									%> <%
+ 	if (!request.getAttribute("pre").equals(0)) {
+ %> <a class="text-blue text-strong"
+									href="/NoticeDetailController?id=<%=request.getAttribute("pre")%>">
+										<%=request.getAttribute("pretitle")%></a> <%
+ 	} else {
+ %> 이전글이 없습니다. <%
+ 	}
+ %>
 								</td>
 							</tr>
 
@@ -208,14 +212,17 @@
 							<tr>
 								<th>다음글</th>
 								<td colspan="3" class="text-align-left text-indent">
-								
-								<%if(!request.getAttribute("next").equals(0)){ %>
-								<a class="text-blue text-strong" href="/NoticeDetailController?id=<%=request.getAttribute("next")%>"><%=request.getAttribute("nexttitle")%></a>
-								<%}else{%>
-									다음글이 없습니다.
-								<%} %>
-								
-								
+									<%
+										if (!request.getAttribute("next").equals(0)) {
+									%> <a class="text-blue text-strong"
+									href="/NoticeDetailController?id=<%=request.getAttribute("next")%>"><%=request.getAttribute("nexttitle")%></a>
+									<%
+										} else {
+									%> 다음글이 없습니다. <%
+										}
+									%>
+
+
 								</td>
 							</tr>
 
