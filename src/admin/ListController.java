@@ -53,6 +53,8 @@ public class ListController extends HttpServlet {
 			case "일괄공개":
 				for (String openid : openIDs) {
 					System.out.println("open-id= " + openid + "\n");
+					PreparedStatement st =con.prepareStatement("update notice set public=1 where id= "+openid);
+					st.executeUpdate();
 				}
 				break;
 			case "일괄삭제":

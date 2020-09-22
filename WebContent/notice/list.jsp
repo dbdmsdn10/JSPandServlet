@@ -31,24 +31,24 @@ int cnt = 0;
 if (what == null || query == null) {
 	Statement st = con.createStatement();
 	rs = st.executeQuery(
-	"select count(*) as cnt from (select * from (select @rownum:=@rownum+1 as num,n. *from (select *from notice_view order by regfate,id desc) n, (select @rownum:=0) r) b)c");
+	"select count(*) as cnt from (select * from (select @rownum:=@rownum+1 as num,n. *from (select *from notice_view where public='1' order by regfate,id desc) n, (select @rownum:=0) r) b)c");
 	rs.next();
 	cnt = rs.getInt("cnt");
 	rs = st.executeQuery(
-	"select * from (select * from (select @rownum:=@rownum+1 as num,n. *from (select *from notice_view order by regfate,id desc) n, (select @rownum:=0) r) b)c where num between 1 and 5");
+	"select * from (select * from (select @rownum:=@rownum+1 as num,n. *from (select *from notice_view where public='1' order by regfate,id desc) n, (select @rownum:=0) r) b)c where num between 1 and 5");
 } else {
 	if (what.equals("")) {
 		what = "title";
 	}
 	PreparedStatement st2 = con.prepareStatement(
-	"select*from(select count(*) as cnt from (select * from (select @rownum:=@rownum+1 as num,n. *from (select *from notice_view order by regfate,id desc) n, (select @rownum:=0) r)c where "
+	"select*from(select count(*) as cnt from (select * from (select @rownum:=@rownum+1 as num,n. *from (select *from notice_view where public='1' order by regfate,id desc) n, (select @rownum:=0) r)c where "
 			+ what + " like ?)d)e");
 	st2.setString(1, "%" + query + "%");
 	rs = st2.executeQuery();
 	rs.next();
 	cnt = rs.getInt("cnt");
 	st2 = con.prepareStatement(
-	"select*from(select @rownum2:=@rownum2+1 as num2,d.* from (select * from (select @rownum:=@rownum+1 as num,n. *from (select *from notice_view order by regfate,id desc) n, (select @rownum:=0) r)c where "
+	"select*from(select @rownum2:=@rownum2+1 as num2,d.* from (select * from (select @rownum:=@rownum+1 as num,n. *from (select *from notice_view where public='1' order by regfate,id desc) n, (select @rownum:=0) r)c where "
 			+ what + " like ?)d ,(select @rownum2:=0) q)e where num2 between " + page2 + " and " + (page2 + 4));
 	st2.setString(1, "%" + query + "%");
 	rs = st2.executeQuery();

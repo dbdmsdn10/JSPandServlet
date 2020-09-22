@@ -232,6 +232,14 @@ if (cnt % 5 == 0) {
 								<%
 									while (rs.next()) {
 								%>
+								<c:set var="open" value=""></c:set>
+								<%
+									if (rs.getInt("public") == 1) {
+								%>
+								<c:set var="open" value="checked"></c:set>
+								<%
+									}
+								%>
 								<tr>
 									<td><%=rs.getInt("num")%></td>
 
@@ -242,7 +250,8 @@ if (cnt % 5 == 0) {
 									<td><%=rs.getString("WRITER_ID")%></td>
 									<td><%=rs.getString("REGFATE")%></td>
 									<td><%=rs.getString("HIT")%></td>
-									<td><input type="checkbox" name="open-id"
+
+									<td><input type="checkbox" name="open-id" ${open}
 										value=<%=rs.getString("id")%>></td>
 									<td><input type="checkbox" name="del-id"
 										value=<%=rs.getString("id")%>></td>
