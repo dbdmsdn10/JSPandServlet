@@ -228,7 +228,7 @@ if (cnt % 5 == 0) {
 								</tr>
 							</thead>
 							<tbody>
-
+							<c:set var="ids" value=""/>
 								<%
 									while (rs.next()) {
 								%>
@@ -256,6 +256,8 @@ if (cnt % 5 == 0) {
 									<td><input type="checkbox" name="del-id"
 										value=<%=rs.getString("id")%>></td>
 								</tr>
+								<%pageContext.setAttribute("id", rs.getString("id"));%>
+								<c:set var="ids" value="${ids} ${id}" />
 								<%
 									}
 								%>
@@ -270,6 +272,7 @@ if (cnt % 5 == 0) {
 							/
 							<%=cnt%>
 							pages
+							<input type="hidden" name="ids" value="${ids}">
 						</div>
 					</div>
 

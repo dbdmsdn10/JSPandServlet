@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -38,7 +40,8 @@ public class ListController extends HttpServlet {
 		String[] openIDs = request.getParameterValues("open-id");
 		String[] delIDs = request.getParameterValues("del-id");
 		String cmd = request.getParameter("cmd");
-
+		String ids_ = request.getParameter("ids");
+		String[] ids = ids_.split(" ");
 		Connection con;
 
 		try {
@@ -47,21 +50,38 @@ public class ListController extends HttpServlet {
 			con = DriverManager.getConnection(
 					"jdbc:mysql://localhost:3306/xepdb?characterEncoding=UTF-8&serverTimezone=UTC", "root",
 					"9009908dms");
-			 
-			
+
 			switch (cmd) {
 			case "일괄공개":
-				for (String openid : openIDs) {
-					System.out.println("open-id= " + openid + "\n");
-					PreparedStatement st =con.prepareStatement("update notice set public=1 where id= "+openid);
-					st.executeUpdate();
+				
+				
+				if (openIDs==null) {
+					for (int i = 1; i < ids.length; i++) {
+						PreparedStatement st = con
+								.prepareStatement("update notice set public=0 where id= " + ids[i]);
+						st.executeUpdate();
+					}
+				} else {
+					List<String> oids = Arrays.asList(openIDs);
+					for (int i = 1; i < ids.length; i++) {
+						System.out.println("open-id= " + ids[i] + "\n");
+						if (oids.contains(ids[i])) {
+							PreparedStatement st = con
+									.prepareStatement("update notice set public=1 where id= " + ids[i]);
+							st.executeUpdate();
+						} else {
+							PreparedStatement st = con
+									.prepareStatement("update notice set public=0 where id= " + ids[i]);
+							st.executeUpdate();
+						}
+					}
 				}
 				break;
 			case "일괄삭제":
 				for (String delid : delIDs) {
-					
+
 					System.out.println("del-id= " + delid + "\n");
-					PreparedStatement st =con.prepareStatement("DELETE from notice where id= "+delid);
+					PreparedStatement st = con.prepareStatement("DELETE from notice where id= " + delid);
 					st.executeUpdate();
 				}
 				break;
@@ -74,9 +94,8 @@ public class ListController extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println(e.toString());
-		}
-		catch (Exception e) {
-			System.out.println("오류= "+e.toString());
+		} catch (Exception e) {
+			System.out.println("오류= " + e.toString());
 		}
 		request.getRequestDispatcher("/admin/board/notice/list.jsp").forward(request, response);
 	}
